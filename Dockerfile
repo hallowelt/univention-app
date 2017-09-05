@@ -24,17 +24,18 @@ RUN echo "JAVA_OPTS=\"\${JAVA_OPTS} -Dsolr.solr.home=/opt/bluespice/solr\"" >> /
 COPY configs/etc/tomcat8/* /etc/tomcat8/
 
 #mysql data
-ENV MYSQL_HOST="172.17.0.1"
-ENV MYSQL_PORT="3306"
-ENV MYSQL_DB="bluespice_all_in"
-ENV MYSQL_USER="bluespice_all_in"
-ENV MYSQL_PASS="w893bzrn"
+ENV DB_HOST=""
+ENV DB_PORT="3306"
+ENV DB_NAME=""
+ENV DB_USER=""
+ENV DB_PASSWORD=""
 #installation data
 ENV WIKI_NAME="BlueSpice MediaWiki"
 ENV WIKI_ADMIN="WikiSysop"
 
 VOLUME /data /var/www/html/w/images /var/www/html/w/cache/var/www/html/w/cache /var/www/html/w/extensions/BlueSpiceFoundation/data /var/www/html/w/extensions/BlueSpiceFoundation/config
 EXPOSE 80
+EXPOSE 443
 EXPOSE 8080
 
 COPY scripts/* /root/
