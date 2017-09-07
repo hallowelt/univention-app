@@ -25,6 +25,9 @@ RUN echo "JAVA_OPTS=\"\${JAVA_OPTS} -Dsolr.solr.home=/opt/bluespice/solr\"" >> /
 
 COPY configs/etc/tomcat8/* /etc/tomcat8/
 COPY configs/var/www/html/w/* /var/www/html/w/
+COPY scripts/* /root/
+
+RUN sh /root/backup_installation.sh
 
 #mysql data
 ENV DB_HOST=""
@@ -41,6 +44,6 @@ EXPOSE 80
 EXPOSE 443
 EXPOSE 8080
 
-COPY scripts/* /root/
+
 
 CMD sh /root/start.sh

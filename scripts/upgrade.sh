@@ -2,14 +2,6 @@
 # upgrade bluespice free docker container to bluespice pro
 # use git to track changes, revert possible after test period
 WIKI_BASE_PATH="/var/www/html/w"
-#remove git folder to backup everything
-find $WIKI_BASE_PATH -name '.git' -exec rm -R {} \;
-
-git config --global user.email "support@hallowelt.com"
-git config --global user.name "HalloWelt! GmbH"
-
-#backup snapshot of bs free
-cd $WIKI_BASE_PATH; git init; git add -A; git commit -m 'init'
 
 #download bluespice from hallowelt server before running this script, put into /data/ directory ...
 #...
@@ -20,7 +12,7 @@ fi
 if [ -d /tmp/bluespice-pro/ ]; then
   rsync -a /tmp/bluespice-pro/ $WIKI_BASE_PATH; rm /tmp/bluespice-pro/ -R
   cd $WIKI_BASE_PATH;
-  git checkout -b bluespice_pro; git add -A; git commit -m 'bluespice pro'
+  git checkout -B bluespice_pro; git add -A; git commit -m 'bluespice pro'
 
   #update data and webservices
   find $WIKI_BASE_PATH -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
