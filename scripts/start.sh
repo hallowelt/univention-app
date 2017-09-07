@@ -1,5 +1,6 @@
 #!/bin/sh
 service tomcat8 start
+service memcached start
 
 fileLocalSettings="/data/LocalSettings.php"
 basePath="/var/www/html/w/"

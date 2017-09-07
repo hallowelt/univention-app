@@ -27,8 +27,12 @@ RUN cp /opt/bluespice/solr/bluespice/conf/lang/stopwords_de.txt /opt/bluespice/s
 RUN chown -R tomcat8:tomcat8 /opt/bluespice/solr/
 RUN echo "JAVA_OPTS=\"\${JAVA_OPTS} -Dsolr.solr.home=/opt/bluespice/solr\"" >> /etc/default/tomcat8
 
-COPY configs/etc/tomcat8/* /etc/tomcat8/
-COPY configs/var/www/html/w/* /var/www/html/w/
+COPY configs/etc/memcached.conf /etc/memcached.conf
+COPY configs/etc/tomcat8/context.xml /etc/tomcat8/context.xml
+COPY configs/etc/tomcat8/server.xml /etc/tomcat8/server.xml
+COPY configs/etc/php/7.0/apache2/php.ini /etc/php/7.0/apache2/php.ini
+COPY configs/var/www/html/w/.gitignore /var/www/html/w/.gitignore
+COPY configs/var/www/html/w/settings.d/005-Memcached.php /var/www/html/w/settings.d/005-Memcached.php
 COPY scripts/* /root/
 
 RUN mkdir /root/cronjobs
