@@ -17,4 +17,9 @@ if [ -d /tmp/bluespice-pro/ ]; then
   #update data and webservices
   find $WIKI_BASE_PATH -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
   php ${WIKI_BASE_PATH}/maintenance/update.php --quick
+  php ${WIKI_BASE_PATH}/maintenance/rebuildall.php
+  chown www-data:www-data ${WIKI_BASE_PATH} -R
+
+  #cronjobs ...
+
 fi

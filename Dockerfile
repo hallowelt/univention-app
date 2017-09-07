@@ -8,7 +8,11 @@ RUN apt-get update && apt-get -y install tomcat8
 
 RUN apt-get -y install unzip rsync
 
-RUN apt-get update && apt-get -y install git-core
+RUN apt-get -y install git-core
+
+RUN apt-get -y install cron
+
+RUN apt-get install -y python memcached
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -27,6 +31,9 @@ COPY configs/etc/tomcat8/* /etc/tomcat8/
 COPY configs/var/www/html/w/* /var/www/html/w/
 COPY scripts/* /root/
 
+RUN mkdir /root/cronjobs
+COPY cronjobs/* /root/cronjobs/
+RUN crontab /root/cronjobs/runJobs.txt
 RUN sh /root/backup_installation.sh
 
 #mysql data
@@ -43,7 +50,5 @@ VOLUME /data /var/www/html/w/images /var/www/html/w/cache/var/www/html/w/cache /
 EXPOSE 80
 EXPOSE 443
 EXPOSE 8080
-
-
 
 CMD sh /root/start.sh
