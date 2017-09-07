@@ -8,6 +8,8 @@ RUN apt-get update && apt-get -y install tomcat8
 
 RUN apt-get -y install unzip rsync
 
+RUN apt-get update && apt-get -y install git-core
+
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY files/* /tmp/
@@ -22,6 +24,7 @@ RUN chown -R tomcat8:tomcat8 /opt/bluespice/solr/
 RUN echo "JAVA_OPTS=\"\${JAVA_OPTS} -Dsolr.solr.home=/opt/bluespice/solr\"" >> /etc/default/tomcat8
 
 COPY configs/etc/tomcat8/* /etc/tomcat8/
+COPY configs/var/www/html/w/* /var/www/html/w/
 
 #mysql data
 ENV DB_HOST=""
