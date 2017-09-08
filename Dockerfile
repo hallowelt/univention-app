@@ -18,11 +18,13 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY files/* /tmp/
 
-RUN cd /tmp && tar xzvf mediawiki.tar.gz && mv mediawiki-1.27.3/ /var/www/html/w
-RUN cd /tmp && unzip bluespice.zip && rsync -a bluespice-free/ /var/www/html/w/ && rm bluespice-free/ -Rf
+ENV BLUESPICE_WEBROOT="/var/www/html/bluespice"
+
+RUN cd /tmp && tar xzvf mediawiki.tar.gz && mv mediawiki-1.27.3/ ${BLUESPICE_WEBROOT}
+RUN cd /tmp && unzip bluespice.zip && rsync -a bluespice-free/ ${BLUESPICE_WEBROOT}/ && rm bluespice-free/ -Rf
 RUN cd /tmp && rm bluespice.zip mediawiki.tar.gz
-RUN find /var/www/html/w/ -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
-RUN mkdir /opt/bluespice/ && mv /var/www/html/w/extensions/BlueSpiceExtensions/ExtendedSearch/webservices/solr/ /opt/bluespice/
+RUN find ${BLUESPICE_WEBROOT}/ -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
+RUN mkdir /opt/bluespice/ && mv ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/webservices/solr/ /opt/bluespice/
 RUN cp /opt/bluespice/solr/bluespice/conf/lang/stopwords_de.txt /opt/bluespice/solr/bluespice/conf/stopwords.txt
 RUN chown -R tomcat8:tomcat8 /opt/bluespice/solr/
 RUN echo "JAVA_OPTS=\"\${JAVA_OPTS} -Dsolr.solr.home=/opt/bluespice/solr\"" >> /etc/default/tomcat8
@@ -31,8 +33,8 @@ COPY configs/etc/memcached.conf /etc/memcached.conf
 COPY configs/etc/tomcat8/context.xml /etc/tomcat8/context.xml
 COPY configs/etc/tomcat8/server.xml /etc/tomcat8/server.xml
 COPY configs/etc/php/7.0/apache2/php.ini /etc/php/7.0/apache2/php.ini
-COPY configs/var/www/html/w/.gitignore /var/www/html/w/.gitignore
-COPY configs/var/www/html/w/settings.d/005-Memcached.php /var/www/html/w/settings.d/005-Memcached.php
+COPY configs${BLUESPICE_WEBROOT}/.gitignore ${BLUESPICE_WEBROOT}/.gitignore
+COPY configs${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php ${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php
 COPY scripts/* /root/
 
 RUN mkdir /root/cronjobs
@@ -50,7 +52,7 @@ ENV DB_PASSWORD=""
 ENV WIKI_NAME="BlueSpice MediaWiki"
 ENV WIKI_ADMIN="WikiSysop"
 
-VOLUME /data /var/www/html/w/images /var/www/html/w/cache/var/www/html/w/cache /var/www/html/w/extensions/BlueSpiceFoundation/data /var/www/html/w/extensions/BlueSpiceFoundation/config
+VOLUME /data ${BLUESPICE_WEBROOT}/images ${BLUESPICE_WEBROOT}/cache${BLUESPICE_WEBROOT}/cache ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/data ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/config
 EXPOSE 80
 EXPOSE 443
 EXPOSE 8080

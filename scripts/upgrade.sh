@@ -1,7 +1,7 @@
 #!/bin/sh
 # upgrade bluespice free docker container to bluespice pro
 # use git to track changes, revert possible after test period
-WIKI_BASE_PATH="/var/www/html/w"
+WIKI_BASE_PATH="/var/www/html/bluespice"
 
 #download bluespice from hallowelt server before running this script, put into /data/ directory ...
 #...
