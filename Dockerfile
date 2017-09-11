@@ -2,7 +2,7 @@ FROM debian:stretch
 
 RUN apt-get update && apt-get -y install apache2
 
-RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php7.0-json php7.0-curl php7.0-xml php7.0-gd php7.0-tidy curl apache2-mod-php7.0
+RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php7.0-json php7.0-curl php7.0-xml php7.0-gd php7.0-tidy php7.0-intl curl apache2-mod-php7.0
 
 RUN apt-get update && apt-get -y install tomcat8
 
@@ -19,9 +19,10 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 COPY files/* /tmp/
 
 ENV BLUESPICE_WEBROOT="/var/www/html/bluespice"
+ENV BLUESPICE_CONFIG_PATH="/etc/bluespice"
 
 RUN cd /tmp && tar xzvf mediawiki.tar.gz && mv mediawiki-1.27.3/ ${BLUESPICE_WEBROOT}
-RUN cd /tmp && unzip bluespice.zip && rsync -a bluespice-free/ ${BLUESPICE_WEBROOT}/ && rm bluespice-free/ -Rf
+RUN cd /tmp && unzip bluespice.zip && rsync -a bluespice-free/ ${BLUESPICE_WEBROOT} && rm bluespice-free/ -Rf
 RUN cd /tmp && rm bluespice.zip mediawiki.tar.gz
 RUN find ${BLUESPICE_WEBROOT}/ -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
 RUN mkdir /opt/bluespice/ && mv ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/webservices/solr/ /opt/bluespice/
@@ -35,12 +36,11 @@ COPY configs/etc/tomcat8/server.xml /etc/tomcat8/server.xml
 COPY configs/etc/php/7.0/apache2/php.ini /etc/php/7.0/apache2/php.ini
 COPY configs${BLUESPICE_WEBROOT}/.gitignore ${BLUESPICE_WEBROOT}/.gitignore
 COPY configs${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php ${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php
-COPY scripts/* /root/
+COPY scripts/* /usr/sbin/
 
 RUN mkdir /root/cronjobs
 COPY cronjobs/* /root/cronjobs/
 RUN crontab /root/cronjobs/runJobs.txt
-RUN sh /root/backup_installation.sh
 
 #mysql data
 ENV DB_HOST=""
@@ -52,9 +52,8 @@ ENV DB_PASSWORD=""
 ENV WIKI_NAME="BlueSpice MediaWiki"
 ENV WIKI_ADMIN="WikiSysop"
 
-VOLUME /data ${BLUESPICE_WEBROOT}/images ${BLUESPICE_WEBROOT}/cache${BLUESPICE_WEBROOT}/cache ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/data ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/config
+VOLUME ${BLUESPICE_CONFIG_PATH} ${BLUESPICE_WEBROOT}/images ${BLUESPICE_WEBROOT}/cache ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/data ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/config
 EXPOSE 80
-EXPOSE 443
 EXPOSE 8080
 
-CMD sh /root/start.sh
+ENTRYPOINT /usr/sbin/entrypoint.sh
