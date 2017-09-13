@@ -47,7 +47,7 @@ push-files:
 		store_data \
 		uinst \
 		update_app_version \
-		nextcloud.schema \
+		bluespice.schema \
 		i18n/en/README_INSTALL_EN \
 		i18n/de/README_INSTALL_DE \
 		i18n/en/README_UNINSTALL_EN \
