@@ -1,4 +1,4 @@
-# bluespice-all-in
+# univention-app-image
 
 Full installed BlueSpice Free with webservices (tomcat), using external mysql/mariadb and external data storage. Create bluespice installation within minutes.
 
