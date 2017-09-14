@@ -32,6 +32,6 @@ else
 fi
 
 php ${BLUESPICE_WEBROOT}/maintenance/update.php --quick
-php ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/maintenance/searchUpdate.php
+#php ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/maintenance/searchUpdate.php
 
 chown www-data:www-data ${BLUESPICE_WEBROOT} -R
