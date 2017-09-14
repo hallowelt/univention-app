@@ -28,30 +28,7 @@ docker_login=`cat ~/.docker-account-user`
 docker_pwd=`cat ~/.docker-account-pwd`
 
 .PHONY: all
-all: push-files docker
-
-.PHONY: add-version
-add-version:
-	if [ -z ${app_ver} ] ; then echo "no original app_version specified"; exit 13; fi
-	if [ -z ${app_newver} ] ; then echo "no target app_version specified"; exit 13; fi
-	univention-appcenter-control new-version "$(app_name)=$(app_ver)" "$(ucs_version)/$(app_name)=$(app_newver)"
-
-.PHONY: push-files
-push-files:
-	univention-appcenter-control upload --noninteractive $(app_name)=$(app_version) \
-		restore_data_before_setup \
-		setup \
-		restore_data_after_setup \
-		preinst \
-		inst \
-		store_data \
-		uinst \
-		update_app_version \
-		bluespice.schema \
-		i18n/en/README_INSTALL_EN \
-		i18n/de/README_INSTALL_DE \
-		i18n/en/README_UNINSTALL_EN \
-		i18n/de/README_UNINSTALL_DE
+all: docker
 
 .PHONY: docker
 docker:
