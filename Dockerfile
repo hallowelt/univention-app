@@ -2,7 +2,7 @@ FROM debian:stretch
 
 RUN apt-get update && apt-get -y install apache2
 
-RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php7.0-json php7.0-curl php7.0-xml php7.0-gd php7.0-tidy php7.0-intl curl apache2-mod-php7.0
+RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php7.0-json php7.0-curl php7.0-xml php7.0-gd php7.0-tidy php7.0-intl php7.0-ldap curl apache2-mod-php7.0
 
 RUN apt-get update && apt-get -y install tomcat8
 
@@ -36,6 +36,7 @@ COPY configs/etc/tomcat8/server.xml /etc/tomcat8/server.xml
 COPY configs/etc/php/7.0/apache2/php.ini /etc/php/7.0/apache2/php.ini
 COPY configs${BLUESPICE_WEBROOT}/.gitignore ${BLUESPICE_WEBROOT}/.gitignore
 COPY configs${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php ${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php
+COPY configs${BLUESPICE_WEBROOT}/settings.d/005-LdapAuthentication.php ${BLUESPICE_WEBROOT}/settings.d/005-LdapAuthentication.php
 COPY scripts/* /usr/sbin/
 
 RUN mkdir /root/cronjobs

@@ -23,6 +23,7 @@ if [ ! -f $fileLocalSettings ]; then
     echo "wfLoadExtension('BlueSpiceExtensions/ExtendedSearch');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
     echo "wfLoadExtension('BlueSpiceExtensions/UniversalExport');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
     echo "wfLoadExtension('BlueSpiceExtensions/UEModulePDF');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
+
   else
     echo "Error occured: installation not successfull, LocalSettings.php is missing"
   fi
