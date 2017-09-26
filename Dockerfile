@@ -37,6 +37,7 @@ COPY configs/etc/php/7.0/apache2/php.ini /etc/php/7.0/apache2/php.ini
 COPY configs${BLUESPICE_WEBROOT}/.gitignore ${BLUESPICE_WEBROOT}/.gitignore
 COPY configs${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php ${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php
 COPY configs${BLUESPICE_WEBROOT}/settings.d/005-LdapAuthentication.php ${BLUESPICE_WEBROOT}/settings.d/005-LdapAuthentication.php
+COPY configs${BLUESPICE_WEBROOT}/settings.d/999-DomainAdminPermissions.php ${BLUESPICE_WEBROOT}/settings.d/999-DomainAdminPermissions.php
 COPY scripts/* /usr/sbin/
 
 RUN mkdir /root/cronjobs
