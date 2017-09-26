@@ -1,14 +1,17 @@
 <?php
-/*
-$wgGroupPermissions['Domain Admins']['siteadmin'] = true;
-$wgGroupPermissions['Domain Admins']['wikiadmin'] = true;
-$wgGroupPermissions['Domain Admins']['userrights'] = true;
+
+$wgGroupPermissions["Domain Admins"]["wikiadmin"] = true;
+$wgGroupPermissions["Domain Admins"]["workflowedit"] = true;
+$wgGroupPermissions["Domain Admins"]["workflowview"] = true;
+$wgGroupPermissions["Domain Admins"]["userrights"] = true;
+$wgGroupPermissions["Domain Admins"]["statistics"] = true;
+$wgGroupPermissions["Domain Admins"]["siteadmin"] = true;
+$wgGroupPermissions["Domain Admins"]["searchfiles"] = true;
+
 $wgGroupPermissions['Domain Admins']['permissionmanager-viewspecialpage'] = true;
 $wgGroupPermissions['Domain Admins']['groupmanager-viewspecialpage'] = true;
 $wgGroupPermissions['Domain Admins']['usermanager-viewspecialpage'] = true;
-*/
-
-$wgGroupPermissions['Domain Admins'] = $wgGroupPermissions['sysop'];
+$wgGroupPermissions['Domain Admins']['namespacemanager-viewspecialpage'] = true;
 
 require_once "$IP/extensions/LdapAuthentication/LdapAuthentication.php";
 
