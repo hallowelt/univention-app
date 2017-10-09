@@ -13,14 +13,21 @@ else
 fi
 
 rm -f $BLUESPICE_PRO_FILE
-curl --fail -i $BLUESPICE_AUTOSERVICE_URL -H "Authorization: Bearer $TOKEN" -o $BLUESPICE_PRO_FILE
+curl --fail -o $BLUESPICE_PRO_FILE $BLUESPICE_AUTOSERVICE_URL
 
 #install bluespice pro and save snapshot
 if [ -f $BLUESPICE_PRO_FILE  ] && [ -f $BLUESPICE_FREE_BACKUPFILE ]; then
-  rm $BLUESPICE_WEBROOT
-  tar xzvf $BLUESPICE_PRO_FILE -C $BLUESPICE_WEBROOT
+  rm -Rf $BLUESPICE_WEBROOT
+  mkdir $BLUESPICE_WEBROOT
+  unzip $BLUESPICE_PRO_FILE -d $BLUESPICE_WEBROOT
   rm $BLUESPICE_PRO_FILE
   cd $BLUESPICE_WEBROOT
+
+  fileLocalSettings="${BLUESPICE_CONFIG_PATH}/LocalSettings.php"
+  ln -s $fileLocalSettings ${BLUESPICE_WEBROOT}/LocalSettings.php
+
+  #remove bad things added from installer
+  sed -i '/^wfLoadSkin/d' $fileLocalSettings
 
   #update data and webservices
   find $BLUESPICE_WEBROOT -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
