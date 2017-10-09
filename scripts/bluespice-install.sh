@@ -3,11 +3,11 @@
 fileLocalSettings="${BLUESPICE_CONFIG_PATH}/LocalSettings.php"
 fileWikiSysopPass="${BLUESPICE_CONFIG_PATH}/wikisysop_password.txt"
 
-mkdir ${BLUESPICE_DATA_PATH}/cache
-mkdir ${BLUESPICE_DATA_PATH}/images
-mkdir ${BLUESPICE_DATA_PATH}/data
-mkdir ${BLUESPICE_DATA_PATH}/config
-mkdir ${BLUESPICE_DATA_PATH}/compiled_templates
+mkdir -p ${BLUESPICE_DATA_PATH}/cache
+mkdir -p ${BLUESPICE_DATA_PATH}/images
+mkdir -p ${BLUESPICE_DATA_PATH}/data
+mkdir -p ${BLUESPICE_DATA_PATH}/config
+mkdir -p ${BLUESPICE_DATA_PATH}/compiled_templates
 
 if [ ! -f $fileLocalSettings ]; then
   chown www-data:www-data ${BLUESPICE_WEBROOT} -R
