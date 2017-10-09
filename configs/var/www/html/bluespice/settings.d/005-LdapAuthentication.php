@@ -133,7 +133,7 @@ foreach($arrLdapHostDN as $hostDN){
 $sBaseDN = join(',', $arrBaseDN);
 
 $wgLDAPDomainNames                      = array( getenv('LDAP_MASTER') );
-$wgLDAPServerNames                      = array( getenv('LDAP_MASTER') => getenv( 'DB_HOST' ) );
+$wgLDAPServerNames                      = array( getenv('LDAP_MASTER') => getenv( 'LDAP_MASTER' ) );
 $wgLDAPProxyAgent                       = array( getenv('LDAP_MASTER') => getenv( 'LDAP_HOSTDN' ));
 $wgLDAPProxyAgentPassword               = array( getenv('LDAP_MASTER') => file_get_contents( '/etc/machine.secret' ) );
 $wgLDAPEncryptionType                   = array( getenv('LDAP_MASTER') => 'clear' );
