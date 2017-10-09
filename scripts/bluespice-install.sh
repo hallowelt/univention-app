@@ -3,6 +3,12 @@
 fileLocalSettings="${BLUESPICE_CONFIG_PATH}/LocalSettings.php"
 fileWikiSysopPass="${BLUESPICE_CONFIG_PATH}/wikisysop_password.txt"
 
+mkdir ${BLUESPICE_DATA_PATH}/cache
+mkdir ${BLUESPICE_DATA_PATH}/images
+mkdir ${BLUESPICE_DATA_PATH}/data
+mkdir ${BLUESPICE_DATA_PATH}/config
+mkdir ${BLUESPICE_DATA_PATH}/compiled_templates
+
 if [ ! -f $fileLocalSettings ]; then
   chown www-data:www-data ${BLUESPICE_WEBROOT} -R
   if [ ! -f $fileWikiSysopPass ]; then
@@ -24,6 +30,8 @@ if [ ! -f $fileLocalSettings ]; then
     echo "wfLoadExtension('BlueSpiceExtensions/UniversalExport');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
     echo "wfLoadExtension('BlueSpiceExtensions/UEModulePDF');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
 
+    cp ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/config.template/* ${BLUESPICE_DATA_PATH}/config/.
+
   else
     echo "Error occured: installation not successfull, LocalSettings.php is missing"
   fi
@@ -36,3 +44,5 @@ php ${BLUESPICE_WEBROOT}/maintenance/update.php --quick
 #php ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/maintenance/searchUpdate.php
 
 chown www-data:www-data ${BLUESPICE_WEBROOT} -R
+chown www-data:www-data ${BLUESPICE_DATA_PATH} -R
+chown www-data:www-data ${BLUESPICE_CONFIG_PATH} -R

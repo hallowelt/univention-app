@@ -1,1 +1,0 @@
-*/10 * * * * php /var/www/html/w/maintenance/runJobs.php

@@ -5,14 +5,21 @@
 bluespice-backup-free.sh
 
 #download bluespice from hallowelt server before running this script, put into /data/ directory ...
-#...
-#install bluespice pro and save snapshot
-if [ -f ${BLUESPICE_CONFIG_PATH}/bluespice.zip ]; then
-  cp ${BLUESPICE_CONFIG_PATH}/bluespice.zip /tmp/; cd /tmp; unzip bluespice.zip; rm bluespice.zip
+#collect needed data:
+if [ -f $BLUESPICE_CONFIG_PATH/$BLUESPICE_PRO_KEY_FILE ]; then
+  TOKEN=$(cat $BLUESPICE_CONFIG_PATH/$BLUESPICE_PRO_KEY_FILE)
+else
+  TOKEN=""
 fi
-if [ -d /tmp/bluespice-pro/ ]; then
-  rsync -a /tmp/bluespice-pro/ $BLUESPICE_WEBROOT
-  rm /tmp/bluespice-pro/ -R
+
+rm -f $BLUESPICE_PRO_FILE
+curl --fail -i $BLUESPICE_AUTOSERVICE_URL -H "Authorization: Bearer $TOKEN" -o $BLUESPICE_PRO_FILE
+
+#install bluespice pro and save snapshot
+if [ -f $BLUESPICE_PRO_FILE  ] && [ -f $BLUESPICE_FREE_BACKUPFILE ]; then
+  rm $BLUESPICE_WEBROOT
+  tar xzvf $BLUESPICE_PRO_FILE -C $BLUESPICE_WEBROOT
+  rm $BLUESPICE_PRO_FILE
   cd $BLUESPICE_WEBROOT
 
   #update data and webservices
@@ -21,8 +28,5 @@ if [ -d /tmp/bluespice-pro/ ]; then
   php ${BLUESPICE_WEBROOT}/maintenance/rebuildall.php
   chown www-data:www-data ${BLUESPICE_WEBROOT} -R
 
-  git checkout -B bluespice_pro && git add -A && git commit -m 'bluespice pro'
-
   #cronjobs ...
-
 fi
