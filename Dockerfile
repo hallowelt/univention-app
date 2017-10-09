@@ -2,7 +2,7 @@ FROM debian:stretch
 
 RUN apt-get update && apt-get -y install apache2
 
-RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php7.0-json php7.0-curl php7.0-xml php7.0-gd php7.0-tidy curl apache2-mod-php7.0
+RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php7.0-json php7.0-curl php7.0-xml php7.0-gd php7.0-tidy php7.0-intl php7.0-ldap curl apache2-mod-php7.0
 
 RUN apt-get update && apt-get -y install tomcat8
 
@@ -10,7 +10,7 @@ RUN apt-get -y install unzip rsync
 
 RUN apt-get -y install git-core
 
-RUN apt-get -y install cron
+RUN apt-get -y install cron inotify-tools
 
 RUN apt-get install -y python memcached
 
@@ -19,9 +19,17 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 COPY files/* /tmp/
 
 ENV BLUESPICE_WEBROOT="/var/www/html/bluespice"
+ENV BLUESPICE_DATA_PATH="/var/bluespice"
+ENV BLUESPICE_CONFIG_PATH="/etc/bluespice"
+ENV BLUESPICE_FREE_BACKUPFILE="/var/backups/bluespice_free.tar.gz"
+ENV BLUESPICE_PRO_FILE="/tmp/bluespice_pro.tar.gz"
+ENV BLUESPICE_PRO_KEY_FILE=bluespice_pro_key.txt
+ENV BLUESPICE_UPGRADE_JOBFILE=upgrade.task
+ENV BLUESPICE_DOWNGRADE_JOBFILE=downgrade.task
+ENV BLUESPICE_AUTOSERVICE_URL="http://172.17.0.1:8083/frontend/bluespice.zip"
 
 RUN cd /tmp && tar xzvf mediawiki.tar.gz && mv mediawiki-1.27.3/ ${BLUESPICE_WEBROOT}
-RUN cd /tmp && unzip bluespice.zip && rsync -a bluespice-free/ ${BLUESPICE_WEBROOT}/ && rm bluespice-free/ -Rf
+RUN cd /tmp && unzip bluespice.zip && rsync -a bluespice-free/ ${BLUESPICE_WEBROOT} && rm bluespice-free/ -Rf
 RUN cd /tmp && rm bluespice.zip mediawiki.tar.gz
 RUN find ${BLUESPICE_WEBROOT}/ -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
 RUN mkdir /opt/bluespice/ && mv ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/webservices/solr/ /opt/bluespice/
@@ -30,17 +38,15 @@ RUN chown -R tomcat8:tomcat8 /opt/bluespice/solr/
 RUN echo "JAVA_OPTS=\"\${JAVA_OPTS} -Dsolr.solr.home=/opt/bluespice/solr\"" >> /etc/default/tomcat8
 
 COPY configs/etc/memcached.conf /etc/memcached.conf
-COPY configs/etc/tomcat8/context.xml /etc/tomcat8/context.xml
-COPY configs/etc/tomcat8/server.xml /etc/tomcat8/server.xml
+COPY configs/etc/tomcat8/* /etc/tomcat8/
 COPY configs/etc/php/7.0/apache2/php.ini /etc/php/7.0/apache2/php.ini
 COPY configs${BLUESPICE_WEBROOT}/.gitignore ${BLUESPICE_WEBROOT}/.gitignore
-COPY configs${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php ${BLUESPICE_WEBROOT}/settings.d/005-Memcached.php
-COPY scripts/* /root/
+COPY configs${BLUESPICE_WEBROOT}/settings.d/* ${BLUESPICE_WEBROOT}/settings.d/
+COPY scripts/* /usr/sbin/
 
 RUN mkdir /root/cronjobs
 COPY cronjobs/* /root/cronjobs/
-RUN crontab /root/cronjobs/runJobs.txt
-RUN sh /root/backup_installation.sh
+RUN crontab /root/cronjobs/jobs.txt
 
 #mysql data
 ENV DB_HOST=""
@@ -52,9 +58,8 @@ ENV DB_PASSWORD=""
 ENV WIKI_NAME="BlueSpice MediaWiki"
 ENV WIKI_ADMIN="WikiSysop"
 
-VOLUME /data ${BLUESPICE_WEBROOT}/images ${BLUESPICE_WEBROOT}/cache${BLUESPICE_WEBROOT}/cache ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/data ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/config
+VOLUME ${BLUESPICE_CONFIG_PATH} ${BLUESPICE_DATA_PATH}
 EXPOSE 80
-EXPOSE 443
 EXPOSE 8080
 
-CMD sh /root/start.sh
+ENTRYPOINT /usr/sbin/entrypoint.sh
