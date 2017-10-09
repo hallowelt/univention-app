@@ -4,15 +4,15 @@
 // If this is not set database will be used.
 // Must be writable by webserver.
 
-$wgCacheDirectory = getenv( BLUESPICE_DATA_PATH ) . "/cache";
+$wgCacheDirectory = getenv( 'BLUESPICE_DATA_PATH' ) . "/cache";
 
-$wgUploadDirectory = getenv( BLUESPICE_DATA_PATH ) . "/images";
+$wgUploadDirectory = getenv( 'BLUESPICE_DATA_PATH' ) . "/images";
 $wgUploadPath = "$wgScriptPath/nsfr_img_auth.php";
 $wgEnableUploads = true;
 
-define( 'BS_DATA_DIR', getenv( BLUESPICE_DATA_PATH ) . "/data" );
+define( 'BS_DATA_DIR', getenv( 'BLUESPICE_DATA_PATH' ) . "/data" );
 
-define( 'BSCONFIGDIR', getenv( BLUESPICE_DATA_PATH ) . "/config" );
+define( 'BSCONFIGDIR', getenv( 'BLUESPICE_DATA_PATH' ) . "/config" );
 define( 'BSDATADIR', BS_DATA_DIR );
 //..: compiled_templates (Widgets)
 
