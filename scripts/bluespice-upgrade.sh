@@ -30,6 +30,7 @@ if [ -f $BLUESPICE_PRO_FILE  ] && [ -f $BLUESPICE_FREE_BACKUPFILE ]; then
   sed -i '/^wfLoadSkin/d' $fileLocalSettings
 
   #restore needed Settings from backup
+  settingsDirsFilePath="settings.d/005-Directories.local.php"
   settingsLdapFilePath="settings.d/005-LdapAuthentication.php"
   unzip -p $BLUESPICE_FREE_BACKUPFILE $settingsLdapFilePath > ${BLUESPICE_WEBROOT}/$settingsLdapFilePath
   unzip -p $BLUESPICE_FREE_BACKUPFILE $settingsDirsFilePath > ${BLUESPICE_WEBROOT}/$settingsDirsFilePath
