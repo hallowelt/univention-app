@@ -27,7 +27,7 @@ ENV BLUESPICE_FREE_FILE="/tmp/bluespice.zip"
 ENV BLUESPICE_PRO_KEY_FILE=bluespice_pro_key.txt
 ENV BLUESPICE_UPGRADE_JOBFILE=upgrade.task
 ENV BLUESPICE_DOWNGRADE_JOBFILE=downgrade.task
-ENV BLUESPICE_AUTOSERVICE_URL="http://172.17.0.1:8083/frontend/download/docker/2.27.2/bluespice.zip"
+ENV BLUESPICE_AUTOSERVICE_URL="http://172.16.100.11:8083/frontend/download/docker/2.27.2/bluespice.zip"
 
 RUN mkdir ${BLUESPICE_WEBROOT} -p
 RUN unzip ${BLUESPICE_FREE_FILE} -d ${BLUESPICE_WEBROOT} && rm ${BLUESPICE_FREE_FILE}
