@@ -27,12 +27,29 @@ docker_repo=bluespice
 docker_login=`cat ~/.docker-account-user`
 docker_pwd=`cat ~/.docker-account-pwd`
 
+univention_build_basepath=/media/build/univention
+univention_build_mediawiki_path=/mediawiki
+
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
+
 .PHONY: all
 all: docker
 
 .PHONY: docker
 docker:
-	if [ `systemctl is-active docker` = "inactive" ] ; then sudo systemctl start docker; fi
-	sudo docker build -t $(docker_repo)/univention-app-image:$(app_version) .
-	sudo docker login -u $(docker_login) -p $(docker_pwd)
-	sudo docker push $(docker_repo)/univention-app-image:$(app_version)
+	mkdir -p $univention_build_basepath
+
+	if [ !-f $univention_build_basepath/$univention_build_mediawiki_path ]; then
+		git clone -b REL1_27_univention --depth 1 https://github.com/hallowelt/mediawiki.git $univention_build_basepath/$univention_build_mediawiki_path
+	else
+		GIT_DIR=$univention_build_basepath/$univention_build_mediawiki_path/.git GIT_WORK_TREE=$univention_build_basepath/$univention_build_mediawiki_path git pull
+	fi
+
+	composer update --working-dir $univention_build_basepath/$univention_build_mediawiki_path
+	composer archive --working-dir $univention_build_basepath/$univention_build_mediawiki_path --format zip --dir $current_dir/files --file bluespice
+
+	if [ `systemctl is-active docker` = "inactive" ] ; then systemctl start docker; fi
+	docker build -t $(docker_repo)/univention-app-image:$(app_version) .
+	docker login -u $(docker_login) -p $(docker_pwd)
+	docker push $(docker_repo)/univention-app-image:$(app_version)
