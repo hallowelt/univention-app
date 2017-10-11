@@ -23,14 +23,14 @@ ENV BLUESPICE_DATA_PATH="/var/bluespice"
 ENV BLUESPICE_CONFIG_PATH="/etc/bluespice"
 ENV BLUESPICE_FREE_BACKUPFILE="/var/backups/bluespice_free.zip"
 ENV BLUESPICE_PRO_FILE="/tmp/bluespice_pro.zip"
+ENV BLUESPICE_FREE_FILE="/tmp/bluespice.zip"
 ENV BLUESPICE_PRO_KEY_FILE=bluespice_pro_key.txt
 ENV BLUESPICE_UPGRADE_JOBFILE=upgrade.task
 ENV BLUESPICE_DOWNGRADE_JOBFILE=downgrade.task
 ENV BLUESPICE_AUTOSERVICE_URL="http://172.17.0.1:8083/frontend/download/docker/2.27.2/bluespice.zip"
 
-RUN cd /tmp && tar xzvf mediawiki.tar.gz && mv mediawiki-1.27.3/ ${BLUESPICE_WEBROOT}
-RUN cd /tmp && unzip bluespice.zip && rsync -a bluespice-free/ ${BLUESPICE_WEBROOT} && rm bluespice-free/ -Rf
-RUN cd /tmp && rm bluespice.zip mediawiki.tar.gz
+RUN mkdir ${BLUESPICE_WEBROOT} -p
+RUN unzip ${BLUESPICE_FREE_FILE} -d ${BLUESPICE_WEBROOT} && rm ${BLUESPICE_FREE_FILE}
 RUN find ${BLUESPICE_WEBROOT}/ -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
 RUN mkdir /opt/bluespice/ && mv ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/webservices/solr/ /opt/bluespice/
 RUN cp /opt/bluespice/solr/bluespice/conf/lang/stopwords_de.txt /opt/bluespice/solr/bluespice/conf/stopwords.txt
