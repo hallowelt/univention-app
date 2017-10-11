@@ -13,7 +13,7 @@ else
 fi
 
 rm -f $BLUESPICE_PRO_FILE
-curl --fail -o $BLUESPICE_PRO_FILE $BLUESPICE_AUTOSERVICE_URL
+curl --fail -o $BLUESPICE_PRO_FILE -H "Authorization: Bearer $TOKEN" $BLUESPICE_AUTOSERVICE_URL
 
 #install bluespice pro and save snapshot
 if [ -f $BLUESPICE_PRO_FILE  ] && [ -f $BLUESPICE_FREE_BACKUPFILE ]; then
