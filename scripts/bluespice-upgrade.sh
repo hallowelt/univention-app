@@ -29,6 +29,9 @@ if [ -f $BLUESPICE_PRO_FILE  ] && [ -f $BLUESPICE_FREE_BACKUPFILE ]; then
   #remove bad things added from installer
   sed -i '/^wfLoadSkin/d' $fileLocalSettings
 
+  #restore needed Settings from backup
+  settingsDirsFilePath="settings.d/005-Directories.local.php"
+
   #update data and webservices
   find $BLUESPICE_WEBROOT -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
   php ${BLUESPICE_WEBROOT}/maintenance/update.php --quick
