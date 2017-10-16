@@ -46,5 +46,8 @@ docker:
 	rm -f ./files/bluespice.zip; composer archive --working-dir $(build_basepath)/$(build_mediawiki_path) --format zip --dir .. --file bluespice
 	if [ `systemctl is-active docker` = "inactive" ] ; then systemctl start docker; fi
 	docker build -t $(docker_repo)/$(app_name):$(app_version) .
+
+.PHONY: push
+push:
 	docker login -u $(docker_login) -p $(docker_pwd)
 	docker push $(docker_repo)/$(app_name):$(app_version)
