@@ -1,4 +1,4 @@
-# bluespice-all-in
+# BlueSpice Mediawiki Docker Image
 
 Full installed BlueSpice Free with webservices (tomcat), using external mysql/mariadb and external data storage. Create bluespice and mediawiki installation within minutes.
 
@@ -9,13 +9,13 @@ docker run -it  -p 8081:80 \
  -e "DB_NAME=mediawiki" \
  -e "DB_USER=mediawiki" \
  -e "DB_PASSWORD=my_secret" \
- -v /var/mediawiki/:/var/mediawiki \
- -v /etc/mediawiki:/etc/mediawiki \
+ -v /var/bluespice/:/var/bluespice \
+ -v /etc/bluespice:/etc/bluespice \
 bluespice/mediawiki
 ```
 
 Replace "-it" with "-d" for daemon mode.
 
-Point your Browser to http://localhost:8081/w to access the wiki
+Point your Browser to http://localhost:8081/bluespice to access the wiki
 
-The installer creates the admin user "WikiSysop" with a random password which can be found in the file wikisysop_password.txt in your /data directory (eg.: /var/mediawiki/data/wikisysop_password.txt).
+The installer creates the admin user "WikiSysop" with a random password which can be found in the file wikisysop_password.txt in your config directory (eg.: /etc/bluespice/wikisysop_password.txt).
