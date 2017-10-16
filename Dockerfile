@@ -14,9 +14,11 @@ RUN apt-get update && apt-get -y install cron inotify-tools
 
 RUN apt-get update && apt-get install -y python memcached
 
+RUN apt-get update && apt-get install -y gnupg2 && curl -sL https://deb.nodesource.com/setup_6.x | bash - && apt-get install -y nodejs
+
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY files/* /tmp/
+COPY files/bluespice.zip /tmp/.
 
 ENV BLUESPICE_WEBROOT="/var/www/html/bluespice"
 ENV BLUESPICE_DATA_PATH="/var/bluespice"
@@ -27,6 +29,8 @@ ENV BLUESPICE_FREE_FILE="/tmp/bluespice.zip"
 ENV BLUESPICE_PRO_KEY_FILE=bluespice_pro_key.txt
 ENV BLUESPICE_UPGRADE_JOBFILE=upgrade.task
 ENV BLUESPICE_DOWNGRADE_JOBFILE=downgrade.task
+ENV BLUESPICE_UPGRADE_ERRORFILE=upgrade.error
+ENV BLUESPICE_DOWNGRADE_ERRORFILE=downgrade.error
 ENV BLUESPICE_AUTOSERVICE_URL="http://172.16.100.11:8083/frontend/download/docker/2.27.2/bluespice.zip"
 
 RUN mkdir ${BLUESPICE_WEBROOT} -p
