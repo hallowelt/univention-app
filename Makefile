@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 app_name=mediawiki
-app_version=latest
+app_version=dev-master
 
 docker_repo=bluespice
 docker_login=`cat ~/.docker-account-user`
@@ -46,5 +46,5 @@ docker:
 	rm -f ./files/bluespice.zip; composer archive --working-dir $(build_basepath)/$(build_mediawiki_path) --format zip --dir .. --file bluespice
 	if [ `systemctl is-active docker` = "inactive" ] ; then systemctl start docker; fi
 	docker build -t $(docker_repo)/$(app_name):$(app_version) .
-	#docker login -u $(docker_login) -p $(docker_pwd)
-	#docker push $(docker_repo)/$(app_name):$(app_version)
+	docker login -u $(docker_login) -p $(docker_pwd)
+	docker push $(docker_repo)/$(app_name):$(app_version)
