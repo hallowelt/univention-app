@@ -9,8 +9,8 @@ docker run -it  -p 8081:80 \
  -e "DB_NAME=mediawiki" \
  -e "DB_USER=mediawiki" \
  -e "DB_PASSWORD=my_secret" \
- -v /var/mediawiki/:/var/mediawiki \
- -v /etc/mediawiki:/etc/mediawiki \
+ -v /var/bluespice/:/var/bluespice \
+ -v /etc/bluespice:/etc/bluespice \
 bluespice/mediawiki
 ```
 
