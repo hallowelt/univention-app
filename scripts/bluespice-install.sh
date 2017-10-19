@@ -25,7 +25,6 @@ if [ ! -f $fileLocalSettings ]; then
     mv ${BLUESPICE_WEBROOT}/LocalSettings.php $fileLocalSettings
     ln -s $fileLocalSettings ${BLUESPICE_WEBROOT}/LocalSettings.php
 
-    echo "wfLoadExtension('BlueSpiceExtensions/ExtendedSearch');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
     echo "wfLoadExtension('BlueSpiceExtensions/UniversalExport');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
     echo "wfLoadExtension('BlueSpiceExtensions/UEModulePDF');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
 
