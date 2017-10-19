@@ -36,10 +36,6 @@ ENV BLUESPICE_AUTOSERVICE_URL="http://172.16.100.11:8083/frontend/download/docke
 RUN mkdir ${BLUESPICE_WEBROOT} -p
 RUN unzip ${BLUESPICE_FREE_FILE} -d ${BLUESPICE_WEBROOT} && rm ${BLUESPICE_FREE_FILE}
 RUN find ${BLUESPICE_WEBROOT}/ -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
-RUN mkdir /opt/bluespice/ && mv ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/webservices/solr/ /opt/bluespice/
-RUN cp /opt/bluespice/solr/bluespice/conf/lang/stopwords_de.txt /opt/bluespice/solr/bluespice/conf/stopwords.txt
-RUN chown -R tomcat8:tomcat8 /opt/bluespice/solr/
-RUN echo "JAVA_OPTS=\"\${JAVA_OPTS} -Dsolr.solr.home=/opt/bluespice/solr\"" >> /etc/default/tomcat8
 
 COPY configs/etc/memcached.conf /etc/memcached.conf
 COPY configs/etc/tomcat8/* /etc/tomcat8/
