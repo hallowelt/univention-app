@@ -31,7 +31,7 @@ ENV BLUESPICE_UPGRADE_JOBFILE=upgrade.task
 ENV BLUESPICE_DOWNGRADE_JOBFILE=downgrade.task
 ENV BLUESPICE_UPGRADE_ERRORFILE=upgrade.error
 ENV BLUESPICE_DOWNGRADE_ERRORFILE=downgrade.error
-ENV BLUESPICE_AUTOSERVICE_URL="http://172.16.100.11:8083/frontend/download/docker/2.27.2/bluespice.zip"
+ENV BLUESPICE_AUTOSERVICE_URL="https://selfservice.bluespice.com/frontend/download/docker/master/bluespice.zip"
 
 RUN mkdir ${BLUESPICE_WEBROOT} -p
 RUN unzip ${BLUESPICE_FREE_FILE} -d ${BLUESPICE_WEBROOT} && rm ${BLUESPICE_FREE_FILE}
