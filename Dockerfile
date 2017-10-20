@@ -24,23 +24,27 @@ RUN apt-get update && apt-get install elasticsearch
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY files/bluespice.zip /tmp/.
+COPY files/bluespice_free.zip /tmp/.
 
 ENV BLUESPICE_WEBROOT="/var/www/html/bluespice"
 ENV BLUESPICE_DATA_PATH="/var/bluespice"
 ENV BLUESPICE_CONFIG_PATH="/etc/bluespice"
 ENV BLUESPICE_FREE_BACKUPFILE="/var/backups/bluespice_free.zip"
 ENV BLUESPICE_PRO_FILE="/tmp/bluespice_pro.zip"
-ENV BLUESPICE_FREE_FILE="/tmp/bluespice.zip"
+ENV BLUESPICE_FREE_FILE="/tmp/bluespice_free.zip"
+ENV BLUESPICE_VERSION_FILE=bluespice_version.txt
+ENV BLUESPICE_BASE_ENV="docker"
+ENV BLUESPICE_BASE_VERSION="master"
 ENV BLUESPICE_PRO_KEY_FILE=bluespice_pro_key.txt
 ENV BLUESPICE_UPGRADE_JOBFILE=upgrade.task
 ENV BLUESPICE_DOWNGRADE_JOBFILE=downgrade.task
 ENV BLUESPICE_UPGRADE_ERRORFILE=upgrade.error
 ENV BLUESPICE_DOWNGRADE_ERRORFILE=downgrade.error
-ENV BLUESPICE_AUTOSERVICE_URL="https://selfservice.bluespice.com/frontend/download/docker/master/bluespice.zip"
+ENV BLUESPICE_AUTOSERVICE_URL="https://selfservice.bluespice.com/frontend/download/${BLUESPICE_BASE_ENV}/${BLUESPICE_BASE_VERSION}/bluespice.zip"
 
 RUN mkdir ${BLUESPICE_WEBROOT} -p
 RUN unzip ${BLUESPICE_FREE_FILE} -d ${BLUESPICE_WEBROOT} && rm ${BLUESPICE_FREE_FILE}
+RUN echo ${BLUESPICE_FREE_FILE} > ${BLUESPICE_WEBROOT}/${BLUESPICE_VERSION_FILE}
 RUN find ${BLUESPICE_WEBROOT}/ -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
 
 COPY configs/etc/memcached.conf /etc/memcached.conf

@@ -27,6 +27,7 @@ docker_pwd=`cat ~/.docker-account-pwd`
 
 build_basepath=./files
 build_mediawiki_path=mediawiki
+build_mediawiki_filename=bluespice_free
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
@@ -38,12 +39,12 @@ all: docker
 docker:
 	mkdir -p $(build_basepath)
 	if [ ! -d $(build_basepath)/$(build_mediawiki_path) ] ; then\
-		git clone -b master --depth 1 https://github.com/hallowelt/mediawiki.git $(build_basepath)/$(build_mediawiki_path);\
+		git clone -b master_docker --depth 1 https://github.com/hallowelt/mediawiki.git $(build_basepath)/$(build_mediawiki_path);\
 	else\
 		GIT_DIR=$(build_basepath)/$(build_mediawiki_path)/.git GIT_WORK_TREE=$(build_basepath)/$(build_mediawiki_path) git pull;\
 	fi
 	composer update --working-dir $(build_basepath)/$(build_mediawiki_path)
-	rm -f ./files/bluespice.zip; composer archive --working-dir $(build_basepath)/$(build_mediawiki_path) --format zip --dir .. --file bluespice
+	rm -f ./files/$(build_mediawiki_filename).zip; composer archive --working-dir $(build_basepath)/$(build_mediawiki_path) --format zip --dir .. --file $(build_mediawiki_filename)
 	if [ `systemctl is-active docker` = "inactive" ] ; then systemctl start docker; fi
 	docker build -t $(docker_repo)/$(app_name):$(app_version) .
 
