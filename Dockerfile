@@ -16,6 +16,12 @@ RUN apt-get update && apt-get install -y python memcached
 
 RUN apt-get update && apt-get install -y gnupg2 && curl -sL https://deb.nodesource.com/setup_6.x | bash - && apt-get install -y nodejs
 
+RUN apt-get update && apt-get install wget && wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+
+RUN apt-get update && apt-get install apt-transport-https && echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-5.x.list
+
+RUN apt-get update && apt-get install elasticsearch
+
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY files/bluespice.zip /tmp/.

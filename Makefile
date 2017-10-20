@@ -38,7 +38,7 @@ all: docker
 docker:
 	mkdir -p $(build_basepath)
 	if [ ! -d $(build_basepath)/$(build_mediawiki_path) ] ; then\
-		git clone -b master_docker --depth 1 https://github.com/hallowelt/mediawiki.git $(build_basepath)/$(build_mediawiki_path);\
+		git clone -b master --depth 1 https://github.com/hallowelt/mediawiki.git $(build_basepath)/$(build_mediawiki_path);\
 	else\
 		GIT_DIR=$(build_basepath)/$(build_mediawiki_path)/.git GIT_WORK_TREE=$(build_basepath)/$(build_mediawiki_path) git pull;\
 	fi
