@@ -18,10 +18,6 @@ RUN apt-get update && apt-get install -y gnupg2 && curl -sL https://deb.nodesour
 
 RUN apt-get update && apt-get install wget && wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
 
-RUN apt-get update && apt-get install apt-transport-https && echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-5.x.list
-
-RUN apt-get update && apt-get install elasticsearch
-
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY files/bluespice_free.zip /tmp/.
@@ -46,6 +42,11 @@ RUN mkdir ${BLUESPICE_WEBROOT} -p
 RUN unzip ${BLUESPICE_FREE_FILE} -d ${BLUESPICE_WEBROOT} && rm ${BLUESPICE_FREE_FILE}
 RUN echo ${BLUESPICE_FREE_FILE} > ${BLUESPICE_WEBROOT}/${BLUESPICE_VERSION_FILE}
 RUN find ${BLUESPICE_WEBROOT}/ -name '*.war' -exec mv {} /var/lib/tomcat8/webapps/ \;
+
+RUN mkdir /opt/bluespice/ && cp -R ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/webservices/solr/ /opt/bluespice/
+RUN cp /opt/bluespice/solr/bluespice/conf/lang/stopwords_de.txt /opt/bluespice/solr/bluespice/conf/stopwords.txt
+RUN chown -R tomcat8:tomcat8 /opt/bluespice/solr/
+RUN echo "JAVA_OPTS=\"\${JAVA_OPTS} -Dsolr.solr.home=/opt/bluespice/solr\"" >> /etc/default/tomcat8
 
 COPY configs/etc/memcached.conf /etc/memcached.conf
 COPY configs/etc/tomcat8/* /etc/tomcat8/

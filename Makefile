@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 app_name=mediawiki
-app_version=dev-master
+app_version=dev-REL1_27
 
 docker_repo=bluespice
 docker_login=`cat ~/.docker-account-user`
@@ -33,14 +33,32 @@ mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 
 .PHONY: all
-all: docker
+#all: docker
+
+.PHONY: update
+update:
+	rm -f ./files/$(build_mediawiki_filename).zip; composer archive --working-dir $(build_basepath)/$(build_mediawiki_path) --format zip --dir .. --file $(build_mediawiki_filename)
+	if [ `systemctl is-active docker` = "inactive" ] ; then systemctl start docker; fi
+	docker build -t $(docker_repo)/$(app_name):$(app_version) .
+
+.PHONY: run
+run:
+	docker run -it \
+	-e "DB_HOST=172.17.0.1" \
+	-e "DB_NAME=bluespice_all_in" \
+	-e "DB_USER=bluespice_all_in" \
+	-e "DB_PASSWORD=w893bzrnhsc" \
+	-v /var/bluespice:/var/bluespice \
+	-v /etc/bluespice:/etc/bluespice \
+	$(docker_repo)/$(app_name):$(app_version)
 
 .PHONY: docker
 docker:
 	mkdir -p $(build_basepath)
 	if [ ! -d $(build_basepath)/$(build_mediawiki_path) ] ; then\
-		git clone -b master_docker --depth 1 https://github.com/hallowelt/mediawiki.git $(build_basepath)/$(build_mediawiki_path);\
+		git clone -b REL1_27_docker --depth 1 https://github.com/hallowelt/mediawiki.git $(build_basepath)/$(build_mediawiki_path);\
 	else\
+		GIT_DIR=$(build_basepath)/$(build_mediawiki_path)/.git GIT_WORK_TREE=$(build_basepath)/$(build_mediawiki_path) git checkout REL1_27_docker;\
 		GIT_DIR=$(build_basepath)/$(build_mediawiki_path)/.git GIT_WORK_TREE=$(build_basepath)/$(build_mediawiki_path) git pull;\
 	fi
 	composer update --working-dir $(build_basepath)/$(build_mediawiki_path)
