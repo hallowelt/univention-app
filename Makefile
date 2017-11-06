@@ -24,6 +24,9 @@ app_version=dev-REL1_27
 docker_repo=bluespice
 docker_login=`cat ~/.docker-account-user`
 docker_pwd=`cat ~/.docker-account-pwd`
+db_name=`cat ~/.docker_mw_free_rel127_db`
+db_user=`cat ~/.db_user`
+db_pass=`cat ~/.db_pass`
 
 build_basepath=./files
 build_mediawiki_path=mediawiki
@@ -45,9 +48,9 @@ update:
 run:
 	docker run -it \
 	-e "DB_HOST=172.17.0.1" \
-	-e "DB_NAME=bluespice_all_in" \
-	-e "DB_USER=bluespice_all_in" \
-	-e "DB_PASSWORD=w893bzrnhsc" \
+	-e "DB_NAME=$(db_name)" \
+	-e "DB_USER=$(db_user)" \
+	-e "DB_PASSWORD=$(db_pass)" \
 	-v /var/bluespice:/var/bluespice \
 	-v /etc/bluespice:/etc/bluespice \
 	$(docker_repo)/$(app_name):$(app_version)
