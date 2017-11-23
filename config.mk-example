@@ -1,0 +1,8 @@
+docker_login=
+docker_pwd=
+db_name=
+db_user=
+db_pass=
+db_host=
+mount_var=
+mount_etc=

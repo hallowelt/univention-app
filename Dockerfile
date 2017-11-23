@@ -6,7 +6,7 @@ RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php
 
 RUN apt-get update && apt-get -y install tomcat8
 
-RUN apt-get update && apt-get -y install unzip rsync zip
+RUN apt-get update && apt-get -y install unzip rsync zip nano
 
 RUN apt-get update && apt-get -y install git-core
 
@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y python memcached
 RUN apt-get update && apt-get install -y gnupg2 && curl -sL https://deb.nodesource.com/setup_6.x | bash - && apt-get install -y nodejs
 
 RUN apt-get update && apt-get install wget && wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+
+RUN apt-get update && apt-get install -y mysql-client
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -30,13 +32,16 @@ ENV BLUESPICE_PRO_FILE="/tmp/bluespice_pro.zip"
 ENV BLUESPICE_FREE_FILE="/tmp/bluespice_free.zip"
 ENV BLUESPICE_VERSION_FILE=bluespice_version.txt
 ENV BLUESPICE_BASE_ENV="docker"
-ENV BLUESPICE_BASE_VERSION="master"
+ENV BLUESPICE_BASE_VERSION="REL1_27"
 ENV BLUESPICE_PRO_KEY_FILE=bluespice_pro_key.txt
 ENV BLUESPICE_UPGRADE_JOBFILE=upgrade.task
 ENV BLUESPICE_DOWNGRADE_JOBFILE=downgrade.task
 ENV BLUESPICE_UPGRADE_ERRORFILE=upgrade.error
 ENV BLUESPICE_DOWNGRADE_ERRORFILE=downgrade.error
-ENV BLUESPICE_AUTOSERVICE_URL="https://selfservice.bluespice.com/frontend/download/${BLUESPICE_BASE_ENV}/${BLUESPICE_BASE_VERSION}/bluespice.zip"
+ENV BLUESPICE_AUTOSERVICE_URL_BASE="https://selfservice.bluespice.com/frontend"
+ENV BLUESPICE_AUTOSERVICE_URL="${BLUESPICE_AUTOSERVICE_URL_BASE}/download/${BLUESPICE_BASE_ENV}/${BLUESPICE_BASE_VERSION}/bluespice.zip"
+ENV BLUESPICE_AUTOSERVICE_URL_INFO="${BLUESPICE_AUTOSERVICE_URL_BASE}/info/${BLUESPICE_BASE_ENV}/${BLUESPICE_BASE_VERSION}/bluespice.zip"
+
 
 RUN mkdir ${BLUESPICE_WEBROOT} -p
 RUN unzip ${BLUESPICE_FREE_FILE} -d ${BLUESPICE_WEBROOT} && rm ${BLUESPICE_FREE_FILE}
