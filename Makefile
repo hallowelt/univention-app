@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-app_name=bluespice
+app_name=univention-app-image
 app_version=2.27.2
 
 ucs_version=4.1
@@ -27,8 +27,11 @@ docker_repo=bluespice
 docker_login=`cat ~/.docker-account-user`
 docker_pwd=`cat ~/.docker-account-pwd`
 
-univention_build_basepath=/media/build/univention
-univention_build_mediawiki_path=/mediawiki
+db_pwd=`cat ~/.db_pwd`
+
+build_basepath=./files
+build_mediawiki_path=mediawiki
+build_mediawiki_filename=bluespice_free
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
@@ -36,17 +39,38 @@ current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 .PHONY: all
 all: docker
 
+.PHONY: update
+update:
+	rm -f ./files/$(build_mediawiki_filename).zip; composer archive --working-dir $(build_basepath)/$(build_mediawiki_path) --format zip --dir .. --file $(build_mediawiki_filename)
+	if [ `systemctl is-active docker` = "inactive" ] ; then systemctl start docker; fi
+	docker build -t $(docker_repo)/$(app_name):$(app_version) .
+
+.PHONY: run
+run:
+	docker run -it \
+	-e "DB_HOST=172.17.0.1" \
+	-e "DB_NAME=bluespice_all_in" \
+	-e "DB_USER=bluespice_all_in" \
+	-e DB_PASSWORD=$(db_pwd) \
+	-v /var/bluespice:/var/bluespice \
+	-v /etc/bluespice:/etc/bluespice \
+	$(docker_repo)/$(app_name):$(app_version)
+
 .PHONY: docker
 docker:
-	mkdir -p $(univention_build_basepath)
-	if [ ! -d $(univention_build_basepath)/$(univention_build_mediawiki_path) ] ; then\
-		git clone -b REL1_27_univention --depth 1 https://github.com/hallowelt/mediawiki.git $(univention_build_basepath)/$(univention_build_mediawiki_path);\
+	mkdir -p $(build_basepath)
+	if [ ! -d $(build_basepath)/$(build_mediawiki_path) ] ; then\
+		git clone -b REL1_27_univention --depth 1 https://github.com/hallowelt/mediawiki.git $(build_basepath)/$(build_mediawiki_path);\
 	else\
-		GIT_DIR=$(univention_build_basepath)/$(univention_build_mediawiki_path)/.git GIT_WORK_TREE=$(univention_build_basepath)/$(univention_build_mediawiki_path) git pull;\
+		GIT_DIR=$(build_basepath)/$(build_mediawiki_path)/.git GIT_WORK_TREE=$(build_basepath)/$(build_mediawiki_path) git checkout REL1_27_univention;\
+		GIT_DIR=$(build_basepath)/$(build_mediawiki_path)/.git GIT_WORK_TREE=$(build_basepath)/$(build_mediawiki_path) git pull;\
 	fi
-	composer update --working-dir $(univention_build_basepath)/$(univention_build_mediawiki_path)
-	composer archive --working-dir $(univention_build_basepath)/$(univention_build_mediawiki_path) --format zip --dir $(current_dir)/files --file bluespice
+	composer update --working-dir $(build_basepath)/$(build_mediawiki_path)
+	rm -f ./files/$(build_mediawiki_filename).zip; composer archive --working-dir $(build_basepath)/$(build_mediawiki_path) --format zip --dir .. --file $(build_mediawiki_filename)
 	if [ `systemctl is-active docker` = "inactive" ] ; then systemctl start docker; fi
-	docker build -t $(docker_repo)/univention-app-image:$(app_version) .
+	docker build -t $(docker_repo)/$(app_name):$(app_version) .
+
+.PHONY: push
+push:
 	docker login -u $(docker_login) -p $(docker_pwd)
-	docker push $(docker_repo)/univention-app-image:$(app_version)
+	docker push $(docker_repo)/$(app_name):$(app_version)

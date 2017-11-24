@@ -25,12 +25,8 @@ if [ ! -f $fileLocalSettings ]; then
     mv ${BLUESPICE_WEBROOT}/LocalSettings.php $fileLocalSettings
     ln -s $fileLocalSettings ${BLUESPICE_WEBROOT}/LocalSettings.php
 
-    echo "require \"\$IP/LocalSettings.BlueSpice.php\";" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
-    echo "wfLoadExtension('BlueSpiceExtensions/ExtendedSearch');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
-    echo "wfLoadExtension('BlueSpiceExtensions/UniversalExport');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
-    echo "wfLoadExtension('BlueSpiceExtensions/UEModulePDF');" >> ${BLUESPICE_WEBROOT}/LocalSettings.php
-
-    cp ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/config.template/* ${BLUESPICE_DATA_PATH}/config/.
+    cp -a ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/config.template/. ${BLUESPICE_DATA_PATH}/config
+	cp -a ${BLUESPICE_WEBROOT}/extensions/BlueSpiceFoundation/data.template/. ${BLUESPICE_DATA_PATH}/data
 
   else
     echo "Error occured: installation not successfull, LocalSettings.php is missing"
@@ -41,7 +37,10 @@ else
 fi
 
 php ${BLUESPICE_WEBROOT}/maintenance/update.php --quick
-#php ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/maintenance/searchUpdate.php
+if [  $(curl --write-out %{http_code} --silent --output /dev/null "http://www.google.com/") -ne 200 ] ; then
+	sleep 5
+fi
+php ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtensions/ExtendedSearch/maintenance/searchUpdate.php
 
 chown www-data:www-data ${BLUESPICE_WEBROOT} -R
 chown www-data:www-data ${BLUESPICE_DATA_PATH} -R
