@@ -56,8 +56,6 @@ RUN echo "JAVA_OPTS=\"\${JAVA_OPTS} -Dsolr.solr.home=/opt/bluespice/solr\"" >> /
 COPY configs/etc/memcached.conf /etc/memcached.conf
 COPY configs/etc/tomcat8/* /etc/tomcat8/
 COPY configs/etc/php/7.0/apache2/php.ini /etc/php/7.0/apache2/php.ini
-COPY configs${BLUESPICE_WEBROOT}/.gitignore ${BLUESPICE_WEBROOT}/.gitignore
-COPY configs${BLUESPICE_WEBROOT}/settings.d/* ${BLUESPICE_WEBROOT}/settings.d/
 COPY scripts/* /usr/sbin/
 
 RUN mkdir /root/cronjobs

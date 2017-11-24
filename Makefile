@@ -26,8 +26,6 @@ ucs_version=4.1
 docker_repo=bluespice
 include config.mk
 
-db_pwd=`cat ~/.db_pwd`
-
 build_basepath=./files
 build_mediawiki_path=mediawiki
 build_mediawiki_filename=bluespice_free
