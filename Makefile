@@ -24,8 +24,7 @@ app_version=2.27.2
 ucs_version=4.1
 
 docker_repo=bluespice
-docker_login=`cat ~/.docker-account-user`
-docker_pwd=`cat ~/.docker-account-pwd`
+include config.mk
 
 db_pwd=`cat ~/.db_pwd`
 
@@ -48,12 +47,12 @@ update:
 .PHONY: run
 run:
 	docker run -it \
-	-e "DB_HOST=172.17.0.1" \
-	-e "DB_NAME=bluespice_all_in" \
-	-e "DB_USER=bluespice_all_in" \
-	-e DB_PASSWORD=$(db_pwd) \
-	-v /var/bluespice:/var/bluespice \
-	-v /etc/bluespice:/etc/bluespice \
+	-e "DB_HOST=$(db_host)" \
+	-e "DB_NAME=$(db_name)" \
+	-e "DB_USER=$(db_user)" \
+	-e "DB_PASSWORD=$(db_pass)" \
+	-v $(mount_var):/var/bluespice \
+	-v $(mount_etc):/etc/bluespice \
 	$(docker_repo)/$(app_name):$(app_version)
 
 .PHONY: docker
