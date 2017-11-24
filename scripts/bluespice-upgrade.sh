@@ -21,13 +21,14 @@ fi
 
 #2. token check
 touch $BLUESPICE_CONFIG_PATH/token_check.task
-token_status=$(curl -s -w %{http_code} -H "Authorization: Bearer $TOKEN" $BLUESPICE_AUTOSERVICE_URL_INFO)
+
+token_status=$(curl -o -I -L -s -w %{http_code} -H "Authorization: Bearer $TOKEN" $BLUESPICE_AUTOSERVICE_URL_INFO)
 if [ "$token_status" != "200" ]; then
 	touch $BLUESPICE_CONFIG_PATH/token_check.error
 else
 	rm -f $BLUESPICE_CONFIG_PATH/token_check.error
 fi
-rm $BLUESPICE_CONFIG_PATH/token_status.task
+rm $BLUESPICE_CONFIG_PATH/token_check.task
 
 if [ -f $BLUESPICE_CONFIG_PATH/token_check.error ] ; then
   exit
