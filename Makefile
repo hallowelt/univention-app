@@ -40,7 +40,7 @@ all: docker
 docker:
 	mkdir -p $(univention_build_basepath)
 	if [ ! -d $(univention_build_basepath)/$(univention_build_mediawiki_path) ] ; then\
-		git clone -b REL1_27_univention --depth 1 https://github.com/hallowelt/mediawiki.git $(univention_build_basepath)/$(univention_build_mediawiki_path);\
+		git clone -b master_univention --depth 1 https://github.com/hallowelt/mediawiki.git $(univention_build_basepath)/$(univention_build_mediawiki_path);\
 	else\
 		GIT_DIR=$(univention_build_basepath)/$(univention_build_mediawiki_path)/.git GIT_WORK_TREE=$(univention_build_basepath)/$(univention_build_mediawiki_path) git pull;\
 	fi
