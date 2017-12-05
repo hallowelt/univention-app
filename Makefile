@@ -18,8 +18,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-app_name=bluespice
-app_version=2.27.2
+app_name=univention-app-image
+app_version=3.0.0-alpha.ucs.1
 
 ucs_version=4.1
 
