@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 app_name=univention-app-image
-app_version=2.27.2-univention.1
+app_version=2.27.2-ucs.2
 
 ucs_version=4.1
 
