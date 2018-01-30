@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y mysql-client
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY files/bluespice_free.zip /tmp/.
+COPY files/bluespice_free.zip /tmp/bluespice_free.zip
 
 ENV BLUESPICE_WEBROOT="/var/www/html/bluespice"
 ENV BLUESPICE_DATA_PATH="/var/bluespice"
