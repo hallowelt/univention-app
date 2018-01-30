@@ -2,7 +2,7 @@ FROM debian:stretch
 
 RUN apt-get update && apt-get -y install apache2
 
-RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php7.0-json php7.0-curl php7.0-xml php7.0-gd php7.0-tidy php7.0-intl php7.0-ldap curl apache2-mod-php7.0
+RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php7.0-json php7.0-curl php7.0-xml php7.0-gd php7.0-tidy php7.0-intl php7.0-ldap curl apache2-mod-php7.0 php7.0-zip
 
 RUN apt-get update && apt-get -y install tomcat8
 
