@@ -6,7 +6,7 @@ RUN apt-get update && apt-get -y install php7.0 php7.0-mysql php7.0-mbstring php
 
 RUN apt-get update && apt-get -y install tomcat8
 
-RUN apt-get update && apt-get -y install unzip rsync zip nano
+RUN apt-get update && apt-get -y install unzip rsync zip nano vim
 
 RUN apt-get update && apt-get -y install git-core
 
