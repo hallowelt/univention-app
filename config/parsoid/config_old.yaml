@@ -1,0 +1,15 @@
+worker_heartbeat_timeout: 300000
+
+logging:
+    level: info
+
+services:
+  - module: lib/index.js
+    entrypoint: apiServiceWorker
+    conf:
+        mwApis:
+        - uri: 'http://localhost/api.php'
+          domain: 'bluespice'
+        - uri: 'https://localhost/api.php'
+          domain: 'bluespicessl'
+          strictSSL: false

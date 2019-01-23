@@ -16,18 +16,18 @@ fi
 
 PATH=`echo "$1" | sed -e 's#/$##'`
 
+/bin/chmod -R 644 $PATH
 /usr/bin/find $PATH -type d -exec /bin/chmod 755 {} \;
-/usr/bin/find $PATH -type f -exec /bin/chmod 644 {} \;
+#/usr/bin/find $PATH -type f -exec /bin/chmod 644 {} \;
 
-/bin/chown -R root:root $PATH
+#/bin/chown -R root:root $PATH
 
 pathes=(
-	"$PATH/cache" \
-	"$PATH/images" \
-	"$PATH/_sf_instances" \
-	"$PATH/extensions/BlueSpiceFoundation/data" \
-	"$PATH/extensions/BlueSpiceFoundation/config" \
-	"$PATH/extensions/Widgets/compiled_templates" \
+	"$PATH/cache/" \
+	"$PATH/images/" \
+	"$PATH/extensions/BlueSpiceFoundation/data/" \
+	"$PATH/extensions/BlueSpiceFoundation/config/" \
+	"$PATH/extensions/Widgets/compiled_templates/" \
 )
 
 for i in "${pathes[@]}"; do
@@ -42,9 +42,6 @@ fi
 
 /bin/chown -R $WWW_USER:$WWW_GROUP $WWW_CFG
 
-/usr/bin/find $PATH -iname 'create_pygmentize_bundle' -exec /bin/chmod +x {} \;
-/usr/bin/find $PATH -iname 'pygmentize' -exec /bin/chmod +x {} \;
-
-if [ -d "$PATH/extensions/Scribunto" ]; then
-	/usr/bin/find $PATH/extensions/Scribunto -name 'lua' -type f -exec /bin/chmod 755 {} \;
-fi
+/usr/bin/find $PATH/extensions -iname 'create_pygmentize_bundle' -exec /bin/chmod +x {} \;
+/usr/bin/find $PATH/extensions -iname 'pygmentize' -exec /bin/chmod +x {} \;
+/usr/bin/find $PATH/extensions -name 'lua' -type f -exec /bin/chmod 755 {} \;

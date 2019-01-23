@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if [ -f "/var/www/bluespice/extensions/BlueSpiceEchoConnector/maintenance/processBsEmailBatch.php" ]; then
-	/usr/bin/php /var/www/bluespice/extensions/BlueSpiceEchoConnector/maintenance/processBsEmailBatch.php
-fi
-
-if [ -f "/var/www/bluespice/extensions/BlueSpiceReminder/maintenance/runNotifications.php" ]; then
-	/usr/bin/php /var/www/bluespice/extensions/BlueSpiceReminder/maintenance/runNotifications.php
-fi

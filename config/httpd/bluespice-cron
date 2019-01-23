@@ -1,2 +1,1 @@
 */10 * * * * root /usr/bin/php /var/www/bluespice/maintenance/runJobs.php >> /var/log/bluespice-cron.log 2>&1
-0 6 * * * root /usr/local/bin/bsReminder >> /var/log/bluespice-cron.log 2>&1
