@@ -19,13 +19,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 app_name=univention-app-image
-app_version=3.0.0-alpha.ucs.1
+app_version=3.0.1.ucs.1
 
 ucs_version=4.3
 
-docker_repo=bluespice
-docker_login=`cat ~/.docker-account-user`
-docker_pwd=`cat ~/.docker-account-pwd`
+docker_repo=public.docker.bluespice.com/bluespice
+#docker_repo=bluespice
+#docker_login=`cat ~/.docker-account-user`
+#docker_pwd=`cat ~/.docker-account-pwd`
 
 include config.mk
 
@@ -70,5 +71,5 @@ docker:
 
 .PHONY: push
 push:
-	docker login -u $(docker_login) -p $(docker_pwd)
+#	docker login -u $(docker_login) -p $(docker_pwd)
 	docker push $(docker_repo)/$(app_name):$(app_version)

@@ -16,8 +16,8 @@ fi
 
 PATH=`echo "$1" | sed -e 's#/$##'`
 
-/bin/chmod -R 644 $PATH
-/usr/bin/find $PATH -type d -exec /bin/chmod 755 {} \;
+#/bin/chmod -R 644 $PATH
+#/usr/bin/find $PATH -type d -exec /bin/chmod 755 {} \;
 #/usr/bin/find $PATH -type f -exec /bin/chmod 644 {} \;
 
 #/bin/chown -R root:root $PATH
@@ -32,7 +32,7 @@ pathes=(
 
 for i in "${pathes[@]}"; do
 	if [ -d $i ]; then
-		/bin/chown -R $WWW_USER:$WWW_GROUP $i
+		/bin/chown -R $WWW_USER:$WWW_GROUP $i -R
 	fi
 done
 

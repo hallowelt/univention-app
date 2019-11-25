@@ -1,27 +1,24 @@
 #!/usr/bin/env bash
 
-echo "SetEnv DB_NAME ${DB_NAME}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv DB_PASSWORD ${DB_PASSWORD}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv DB_PORT ${DB_PORT}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv DB_USER ${DB_USER}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv LDAP_BASE ${LDAP_BASE}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv LDAP_HOSTDN ${LDAP_HOSTDN}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv LDAP_MASTER ${LDAP_MASTER}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv LDAP_MASTER_PORT ${LDAP_MASTER_PORT}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv LDAP_SERVER_IP ${LDAP_SERVER_IP}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv LDAP_SERVER_NAME ${LDAP_SERVER_NAME}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv LDAP_SERVER_PORT ${LDAP_SERVER_PORT}" >> /etc/apache2/conf-enabled/setenv.conf
-echo "SetEnv LOCALE_DEFAULT ${LOCALE_DEFAULT}" >> /etc/apache2/conf-enabled/setenv.conf
+chmod o+r /etc/machine.secret
+
+echo "SetEnv DB_NAME ${DB_NAME}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv DB_PASSWORD ${DB_PASSWORD}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv DB_PORT ${DB_PORT}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv DB_USER ${DB_USER}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv LDAP_BASE ${LDAP_BASE}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv LDAP_HOSTDN ${LDAP_HOSTDN}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv LDAP_MASTER ${LDAP_MASTER}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv LDAP_MASTER_PORT ${LDAP_MASTER_PORT}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv LDAP_SERVER_IP ${LDAP_SERVER_IP}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv LDAP_SERVER_NAME ${LDAP_SERVER_NAME}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv LDAP_SERVER_PORT ${LDAP_SERVER_PORT}" >> /etc/apache2/conf-available/setenv.conf
+echo "SetEnv LOCALE_DEFAULT ${LOCALE_DEFAULT}" >> /etc/apache2/conf-available/setenv.conf
 
 a2enconf setenv
 
 # SET CA CERT
 cat /etc/univention/ssl/ucsCA/CAcert.pem > /opt/ca/ca.crt
-
-# COPY PARSOID CONFIG
-cp ${BLUESPICE_WEBROOT}/extensions/BlueSpiceVisualEditorConnector/docs/parsoid/config.yaml /usr/local/parsoid/config.yaml
-cp ${BLUESPICE_WEBROOT}/extensions/BlueSpiceVisualEditorConnector/docs/parsoid/localsettings.js /usr/local/parsoid/localsettings.js
-
 
 # START ELASTICSEARCH
 service elasticsearch start
@@ -37,6 +34,7 @@ screen -dmS Parsoid /usr/local/bin/start_parsoid
 
 # START APACHE2
 service apache2 start
+
 
 
 fileLocalSettings="${BLUESPICE_CONFIG_PATH}/LocalSettings.php"
@@ -88,9 +86,9 @@ ln -s ${BLUESPICE_DATA_PATH}/compiled_templates ${BLUESPICE_WEBROOT}/extensions/
 
 
 # ACTIVATE EXTENDEDSEARCH
-sed -e 's/return;//g' ${BLUESPICE_WEBROOT}/settings.d/020-BlueSpiceExtendedSearch.php
-sed -e 's/return;//g' ${BLUESPICE_WEBROOT}/settings.d/020-VisualEditor.php
-sed -e 's/return;//g' ${BLUESPICE_WEBROOT}/settings.d/020-BlueSpiceVisualEditorConnector.php
+sed -i 's/return;//g' ${BLUESPICE_WEBROOT}/settings.d/020-BlueSpiceExtendedSearch.php
+sed -i 's/return;//g' ${BLUESPICE_WEBROOT}/settings.d/020-VisualEditor.php
+sed -i 's/return;//g' ${BLUESPICE_WEBROOT}/settings.d/020-BlueSpiceVisualEditorConnector.php
 
 
 php ${BLUESPICE_WEBROOT}/maintenance/update.php --quick
@@ -99,38 +97,12 @@ echo "Changing permissions..."
 setWikiPerm ${BLUESPICE_WEBROOT}
 echo "done"
 
+php ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtendedSearch/maintenance/purgeIndexes.php --quick
 php ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtendedSearch/maintenance/initBackends.php --quick
 php ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtendedSearch/maintenance/rebuildIndex.php --quick
 php ${BLUESPICE_WEBROOT}/extensions/BlueSpiceExtendedSearch/maintenance/rebuildIndex.php --quick
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# WAIT FOR 20 SECONDS
-#sleep 20
-
-# BUILD SEARCHINDEX
-#/usr/bin/php /var/www/bluespice/w/extensions/BlueSpiceExtendedSearch/maintenance/initBackends.php --quick
-#/usr/bin/php /var/www/bluespice/w/extensions/BlueSpiceExtendedSearch/maintenance/initBackends.php --quick
-#/usr/bin/php /var/www/bluespice/w/maintenance/runJobs.php
-#/usr/bin/php /var/www/bluespice/w/extensions/BlueSpiceExtendedSearch/maintenance/initBackends.php --quick
-#/usr/bin/php /var/www/bluespice/w/maintenance/runJobs.php
-#/usr/bin/php /var/www/bluespice/w/extensions/BlueSpiceExtendedSearch/maintenance/initBackends.php --quick
-#/usr/bin/php /var/www/bluespice/w/maintenance/runJobs.php
-
-# LOOP
 while [ true ]; do
 	sleep 3600
 done

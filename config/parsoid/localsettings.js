@@ -10,7 +10,8 @@ exports.setup = function(parsoidConfig) {
 		var baseUrl = Buffer.from( domain, 'base64').toString();
 		parsoidConfig.setMwApi({
 			uri: baseUrl + '/api.php',
-			domain: domain
+			domain: domain,
+			strictSSL: false
 		});
 	}
 };

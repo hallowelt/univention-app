@@ -22,13 +22,13 @@ $LDAPProviderDomainConfigProvider = function() {
 				"user" => getenv( 'LDAP_HOSTDN' ),
 				"pass" => file_get_contents( '/etc/machine.secret' ),
 				"basedn" => getenv( 'LDAP_BASE' ),
-				"userbasedn" => 'cn=users,'.getenv( 'LDAP_BASE' ),
-				"groupbasedn" => 'cn=groups,'.getenv( 'LDAP_BASE' ),
+				"userbasedn" => getenv( 'LDAP_BASE' ),
+				"groupbasedn" => getenv( 'LDAP_BASE' ),
 				"searchattribute" => "uid",
 				"usernameattribute" => "uid",
 				"realnameattribute" => "displayname",
 				"emailattribute" => "mail",
-				"grouprequest" => "MediaWiki\\Extension\\LDAPProvider\\UserGroupsRequest\\GroupMember::factory",
+				"grouprequest" => "MediaWiki\\Extension\\LDAPProvider\\UserGroupsRequest\\UserMemberOf::factory",
 				"nestedgroups" => true
 			],
 			"authorization" => [
@@ -39,14 +39,18 @@ $LDAPProviderDomainConfigProvider = function() {
 			"userinfo" => [
 				"attributes-map" => [
 					"email" => "mail",
-					"realname" => "displayname",
-					"nickname" => "uid"
+					"realname" => "displayname"
 				]
 			],
 			"groupsync" => [
+				"mechanism" => "mappedgroups",
 				"mapping" => [
-					"mechanism" => "MediaWiki\\Extension\\LDAPGroups\\SyncMechanism\\AllGroups::factory",
-					"locally-managed" => [ "bot", "bureaucrat", "sysop" ]
+					"sysop" => [
+						"cn=Domain Admins,cn=groups,dc=example,dc=com"
+					],
+					"user" => [
+						"cn=Domain Users,cn=groups,dc=example,dc=com"
+					]
 				]
 			]
 		]
@@ -59,11 +63,7 @@ $LDAPProviderCacheTime = 300;
 $LDAPProviderCacheType = CACHE_MEMCACHED;
 
 $bsgPermissionConfig[ 'autocreateaccount' ] = array( 'type' => 'global', "roles" => [ 'autocreateaccount' ] );
-$wgGroupPermissions['Domain Admins']['read'] = true;
-$wgGroupPermissions['Domain Users']['read'] = true;
 $wgHooks[ 'SetupAfterCache' ][] = function() {
-	$GLOBALS[ 'bsgGroupRoles' ][ 'Domain Admins' ][ 'admin' ] = true;
-	$GLOBALS[ 'bsgGroupRoles' ][ 'Domain Users' ][ 'editor' ] = true;
 	$GLOBALS[ 'bsgGroupRoles' ][ '*' ][ 'reader' ] = false;
 	$GLOBALS[ 'bsgGroupRoles' ][ 'user' ][ 'reader' ] = true;
 	$GLOBALS[ 'bsgGroupRoles' ][ '*' ][ 'autocreateaccount' ] = true;
